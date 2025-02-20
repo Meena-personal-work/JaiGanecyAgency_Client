@@ -1,0 +1,38 @@
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin: 16px;
+    min-height: 150px;
+    max-height: 150px;
+    min-width: 170px;
+    max-width: 200px;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer; /* Add pointer cursor for the clickable card */
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-header h2 {
+    font-size: 1.5em;
+    margin: 0;
+    color: #333;
+  }
+  
+  /* New styling to center content inside card */
+  .card h3 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin: 0;
+  }
+  
