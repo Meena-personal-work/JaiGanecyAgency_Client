@@ -564,6 +564,7 @@ const HomePage = () => {
 
   useEffect(() => {
     handleSearch();  // Call the filter logic whenever `selectedFilter` or `searchQuery` changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFilter, searchQuery]);  // Dependency array makes sure it runs when either of these changes
 
   const handleDeleteAllDispatched = async () => {
