@@ -5,7 +5,7 @@ import { jsPDF } from "jspdf";
 import { FaWhatsapp, FaFilePdf, FaArrowRight, FaTimes } from "react-icons/fa";
 
 import "./HomePage.scss";
-import Card from "../../components/card/card";
+import Card from "../../components/Card/Card";
 
 const HomePage = () => {
   const [users, setUsers] = useState([]);
