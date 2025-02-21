@@ -677,7 +677,7 @@ const HomePage = () => {
                 <div key={month}>
                   <label>{month}</label>
                   <div className="date-container">
-                    <span>Date:</span>
+                    <span>Date: </span>
                     <input
                     type="date"
                     value={userData.months[month]?.date || ""}
