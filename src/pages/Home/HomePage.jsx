@@ -201,6 +201,7 @@ const HomePage = () => {
       if (response.ok) {
         toast.success(`Client transferred to ${targetAdmin} successfully!`);
         fetchUsers(selectedAdmin); // Refresh current admin's user list
+      setTargetAdmin(""); 
         setTransferPopupVisible(false);
       } else {
         console.error("Error transferring user:", await response.text());
@@ -218,15 +219,34 @@ const HomePage = () => {
     setUserData({ ...userData, [name]: value });
   };
 
+  // const handleMonthChange = (month, date, amount, packageDetails, numberOfPayments) => {
+  //   setUserData((prevData) => ({
+  //     ...prevData,
+  //     months: {
+  //       ...prevData.months,
+  //       [month]: { date, amount, packageDetails, numberOfPayments },
+  //     },
+  //   }));
+  // };
+
   const handleMonthChange = (month, date, amount, packageDetails, numberOfPayments) => {
-    setUserData((prevData) => ({
-      ...prevData,
-      months: {
-        ...prevData.months,
-        [month]: { date, amount, packageDetails, numberOfPayments },
-      },
-    }));
+    setUserData((prevData) => {
+      const updatedMonths = { ...prevData.months };
+  
+      // Check if all fields are empty
+      if (!date.trim() && !amount.trim() && !packageDetails.trim() && !numberOfPayments.trim()) {
+        delete updatedMonths[month]; // Remove the month from state
+      } else {
+        updatedMonths[month] = { date, amount, packageDetails, numberOfPayments };
+      }
+  
+      return {
+        ...prevData,
+        months: updatedMonths,
+      };
+    });
   };
+  
 
   const handleSubmit = async (e, isDispatching = false) => {
     e.preventDefault();
@@ -285,6 +305,9 @@ const HomePage = () => {
       toast.error("An error occurred.");
     }
   };
+
+
+ 
 
   const handleDeletePopupOpen = (user) => {
     setUserToDelete(user);
@@ -357,11 +380,11 @@ const HomePage = () => {
 
       // Check if the query matches any of the fields
       const isMatchingQuery = (
-        serialNumber.includes(query) ||
+        // serialNumber.includes(query) ||
         userName.includes(query) ||
-        userPhoneNumber.includes(query) ||
+        // userPhoneNumber.includes(query) ||
         userPlace.includes(query) ||
-        userTransportName.includes(query) ||
+        // userTransportName.includes(query) ||
         packageMatch
       );
 
@@ -508,7 +531,8 @@ const HomePage = () => {
             <>
               <input
                 type="text"
-                placeholder="Search by S.No, Name, Phone, Place, Transport Name"
+                // placeholder="Search by S.No, Name, Phone, Place, Transport Name"
+                placeholder="Search by Name, Place,Package details..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}  // Update searchQuery state on change
                 className="search-input"
