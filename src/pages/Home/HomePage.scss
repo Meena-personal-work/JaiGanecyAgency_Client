@@ -31,6 +31,7 @@
         border-radius: 5px;
         cursor: pointer;
         transition: all 0.3s ease-in-out;
+        margin-top: 15px;
 
         &:hover {
           background-color: #0056b3;
@@ -485,6 +486,12 @@ button:disabled {
 
 }
 
+.date-container{
+  justify-content: center;
+  align-items: center;
+display: flex;
+}
+
 .close-button-container {
 
   display: flex;
@@ -545,7 +552,7 @@ select {
   .search-input {
 
     width: 100%;
-    font-size: 8px;
+    font-size: 11px;
 
   }
 

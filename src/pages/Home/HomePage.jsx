@@ -92,66 +92,11 @@ const HomePage = () => {
     }
   };
 
-
-  // const fetchUsers = async (admin) => {
-  //   if (!admin) return;
-
-  //   try {
-  //     const response = await fetch(`http://localhost:3001/api/users/${admin}`);
-  //     const data = await response.json();
-  //     // Assign static serial numbers based on the fetched data
-  //     const usersWithSerialNumbers = data.map((user, index) => ({
-  //       ...user,
-  //       serialNumber: `${index + 1}${admin.slice(0, 2).toUpperCase()}`,
-  //     }));
-  //     // Set both users and filteredUsers to display data
-  //     setUsers(usersWithSerialNumbers);
-  //     setFilteredUsers(usersWithSerialNumbers);
-  //   } catch (error) {
-  //     console.error("Error fetching users:", error);
-  //   }
-  // };
-  // const fetchAllUsers = async () => {
-  //   try {
-  //     const response = await fetch("http://localhost:3001/api/users");
-  //     const data = await response.json();
-
-  //     // Here, we assume the response contains users for all admins.
-  //     // Assign static serial numbers based on the fetched data
-  //     const usersWithSerialNumbers = data.map((user, index) => ({
-  //       ...user,
-  //       serialNumber: `${index + 1}${user.admin.slice(0, 2).toUpperCase()}`,
-  //     }));
-
-  //     // Set both users and filteredUsers to display all data
-  //     setUsers(usersWithSerialNumbers);
-  //     setFilteredUsers(usersWithSerialNumbers);
-  //   } catch (error) {
-  //     console.error("Error fetching all users:", error);
-  //   }
-  // };
-
-
   useEffect(() => {
     if (selectedAdmin) {
       fetchUsers(selectedAdmin);
     }
   }, [selectedAdmin]);
-
-  // const handleCardClick = (admin) => {
-  //   // If "Home" card is clicked, disable buttons except search
-  //   if (admin === "Home") {
-  //     fetchAllUsers();
-  //     setIsHomeClicked(true);
-  //   } else {
-  //     setIsHomeClicked(false);
-  //   }
-  //   // Clear previous data and set selected admin
-  //   setUsers([]);
-  //   setFilteredUsers([]);
-  //   setSelectedAdmin(admin); // Set the selected admin for fetching users
-  // };
-
 
   const handleCardClick = (admin) => {
     if (admin === "Home") {
@@ -168,26 +113,6 @@ const HomePage = () => {
     setSelectedAdmin(null);
     setTimeout(() => setSelectedAdmin(admin), 0);
   };
-
-
-  // const handleCardClick = (admin) => {
-  //   // If "Home" card is clicked, fetch all users and disable buttons except search
-  //   if (admin === "Home") {
-  //     fetchAllUsers();
-  //     setIsHomeClicked(true);
-  //   } else {
-  //     setIsHomeClicked(false);
-  //   }
-
-  //   // Reset users data before fetching new data
-  //   setUsers([]);
-  //   setFilteredUsers([]);
-
-  //   // If the same admin is clicked again, force re-fetching
-  //   setSelectedAdmin(null);
-  //   setTimeout(() => setSelectedAdmin(admin), 0);
-  // };
-
 
   const handlePopupOpen = (type, user = null) => {
     setPopupType(type);
@@ -353,68 +278,6 @@ const HomePage = () => {
     }
   };
 
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const url =
-  //       popupType === "add"
-  //         ? "http://localhost:3001/api/users"
-  //         : `http://localhost:3001/api/users/${selectedAdmin}/${currentUser._id}`;
-  //     const method = popupType === "add" ? "POST" : "PUT";
-
-  //     // Prepare the data to send to the backend
-  //     let updatedUserData = { ...userData, admin: selectedAdmin };
-
-  //     // If dispatch is triggered (e.g., from a button click), remove unwanted data
-  //     if (dispatch) {
-  //       updatedUserData = {
-  //         name: updatedUserData.name,
-  //         phoneNumber: updatedUserData.phoneNumber,
-  //         place: updatedUserData.place,
-  //         transportName: updatedUserData.transportName,
-  //         admin: selectedAdmin,
-  //         monthData: [] // Remove monthData
-  //       };
-  //     } else {
-  //       // Convert months object to monthData array for the backend
-  //       const monthData = Object.entries(updatedUserData.months).map(([month, details]) => ({
-  //         month,
-  //         date: details.date,
-  //         amount: details.amount,
-  //         packageDetails: details.packageDetails,
-  //         numberOfPayments: details.numberOfPayments
-  //       }));
-  //       updatedUserData.monthData = monthData;
-  //     }
-
-  //     // Send the data to the backend
-  //     const response = await fetch(url, {
-  //       method,
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(updatedUserData),
-  //     });
-
-  //     if (response.ok) {
-  //       fetchUsers(selectedAdmin);
-  //       handlePopupClose();
-  //       setDispatch(false)
-  //       toast.success(
-  //         popupType === "add"
-  //           ? "Customer added successfully"
-  //           : "Customer details updated successfully"
-  //       );
-  //     } else {
-  //       console.error("Error saving user:", await response.text());
-  //       toast.error("Failed to save user.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error submitting form:", error);
-  //     toast.error("An error occurred.");
-  //   }
-  // };
-
   const handleDeletePopupOpen = (user) => {
     setUserToDelete(user);
     setDeletePopupVisible(true);
@@ -451,7 +314,11 @@ const HomePage = () => {
 
   const confirmWhatsappMessage = async () => {
     console.log(userToWhatsapp);
-    const message = `Hello ${userToWhatsapp.name}, your payment received successfully.`
+    // Extracting month and amount
+    const month = userToWhatsapp?.monthData[0].month;
+    const amount = userToWhatsapp?.monthData[0].amount;
+    // const message = `Hello ${userToWhatsapp?.name}, your payment received successfully.`
+    const message = `Hello ${userToWhatsapp?.name}, your payment of ₹${amount} for the month of ${month} has been received successfully. Thank you! 😊`;
     const url = `https://wa.me/${userToWhatsapp?.phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank");
     setWhatsappPopupVisible(false);
@@ -462,66 +329,6 @@ const HomePage = () => {
     setWhatsappPopupVisible(false);
     setUserToWhatsapp(null);
   };
-
-  // const confirmWhatsappMessage = async () => {
-  //   try {
-  //     const response = await fetch("http://localhost:3001/api/whatsapp", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(userToWhatsapp),
-  //     });
-
-  //     if (response.ok) {
-  //       toast.success("WhatsApp message sent successfully!");
-  //     } else {
-  //       console.error("Error sending WhatsApp message:", await response.text());
-  //       toast.error("Failed to send WhatsApp message.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error in confirmWhatsappMessage:", error);
-  //     toast.error("An error occurred while sending WhatsApp message.");
-  //   } finally {
-  //     setWhatsappPopupVisible(false);
-  //     setUserToWhatsapp(null);
-  //   }
-  // };
-
-
-  // Search function
-
-  // const handleSearch = (e) => {
-  //   const query = e.target.value.toLowerCase().trim();
-  //   setSearchQuery(query);
-
-  //   const filtered = users
-  //     .filter(user => !user.isDispatched) // Exclude dispatched users
-  //     .filter(user => {
-  //       // Safely extract and convert all user fields to strings for comparison
-  //       const userName = String(user.name || "").toLowerCase();
-  //       const userPhoneNumber = String(user.phoneNumber || "").toLowerCase();
-  //       const userPlace = String(user.place || "").toLowerCase();
-  //       const userTransportName = String(user.transportName || "").toLowerCase();
-  //       const serialNumber = String(user.serialNumber || "").toLowerCase();
-
-  //       // Check if any packageDetails in monthData matches the query
-  //       const packageMatch = user.monthData?.some(month =>
-  //         String(month.packageDetails || "").toLowerCase().includes(query)
-  //       );
-
-  //       // Check if the query matches any of the fields
-  //       return (
-  //         serialNumber.includes(query) ||
-  //         userName.includes(query) ||
-  //         userPhoneNumber.includes(query) ||
-  //         userPlace.includes(query) ||
-  //         userTransportName.includes(query) ||
-  //         packageMatch
-  //       );
-  //     });
-
-  //   setFilteredUsers(filtered);
-  // };
-
 
   const handleSearch = () => {
     const query = searchQuery.toLowerCase().trim();  // Use searchQuery state directly
@@ -564,7 +371,7 @@ const HomePage = () => {
 
   useEffect(() => {
     handleSearch();  // Call the filter logic whenever `selectedFilter` or `searchQuery` changes
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFilter, searchQuery]);  // Dependency array makes sure it runs when either of these changes
 
   const handleDeleteAllDispatched = async () => {
@@ -574,14 +381,14 @@ const HomePage = () => {
         method: "PUT",  // Use PUT to update data
         headers: { "Content-Type": "application/json" },
       });
-  
+
       if (response.ok) {
         toast.success("All dispatched data cleared successfully");
-  
+
         // After successful deletion, clear the filtered data
         setUsers([]); // Clear users
         setFilteredUsers([]); // Clear filtered users
-  
+
         // Now, re-fetch the data after clearing dispatched users
         fetchUsers(selectedAdmin);  // Make sure selectedAdmin is passed
       } else {
@@ -604,18 +411,18 @@ const HomePage = () => {
     Month
   ) => {
     const pdf = new jsPDF("l", "mm", "a5"); // Landscape orientation, A5 size
-  
+
     // Define the month order
     const monthsOrder = ["Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
-    
+
     // Find the payment month index (1-based)
     const monthIndex = monthsOrder.indexOf(Month) + 1;
     const monthPaymentText = monthIndex > 0 ? `(${monthIndex} Month Payment)` : "";
-  
+
     // Outer border
     pdf.setLineWidth(0.5);
     pdf.rect(10, 10, 180, 130);
-  
+
     // Header
     pdf.setFontSize(14);
     pdf.setFont("helvetica", "bold");
@@ -624,31 +431,31 @@ const HomePage = () => {
     pdf.setFont("helvetica", "normal");
     pdf.text("Sivakasi Bus Stand, Near By Sivakasi", 105, 25, { align: "center" });
     pdf.text("Phone: 95286 48996, 37890 72225", 105, 30, { align: "center" });
-  
+
     // Horizontal line
     pdf.line(10, 35, 190, 35);
-  
+
     // Receipt details
     pdf.setFontSize(12);
     pdf.text("Receipt No :", 15, 45);
     pdf.text(Date.now().toString(), 50, 45);
     pdf.text("Date :", 140, 45);
     pdf.text(`${new Date(date).toLocaleDateString("en-GB")}`, 160, 45);
-  
+
     // Recipient details
     pdf.text("Received from :", 15, 60);
     pdf.setFont("helvetica", "bold");
     pdf.text(`${userName}`, 50, 60);
-  
+
     pdf.setFont("helvetica", "normal");
     pdf.text("Place :", 15, 70);
     pdf.text(`${place}`, 50, 70);
-  
+
     // Amount
     pdf.text("Amount Paid :", 15, 80);
     pdf.setFont("helvetica", "bold");
     pdf.text(`${amount}`, 50, 80);
-  
+
     // Package details
     pdf.setFont("helvetica", "bold");
     pdf.text("Month :", 15, 100);
@@ -657,10 +464,10 @@ const HomePage = () => {
     pdf.text(`${packageDetails}`, 50, 110);
     pdf.text("No of Payments :", 15, 120);
     pdf.text(`${numberOfPayments}`, 50, 120);
-  
+
     pdf.save(`Receipt_${userName}.pdf`);
   };
-  
+
 
   return (
     <div className="home-container">
@@ -676,16 +483,9 @@ const HomePage = () => {
           <h2>{selectedAdmin ? `${selectedAdmin}` : "Select an Admin"}</h2>
           {selectedAdmin && (
             <>
-              {/* <input
-                type="text"
-                placeholder="Search by Serial Number, Name, Phone, Place, or Transport Name..."
-                value={searchQuery}
-                onChange={handleSearch}
-                className="search-input"
-              /> */}
               <input
                 type="text"
-                placeholder="Search by Serial Number, Name, Phone, Place, or Transport Name..."
+                placeholder="Search by S.No, Name, Phone, Place, Transport Name"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}  // Update searchQuery state on change
                 className="search-input"
@@ -778,7 +578,7 @@ const HomePage = () => {
                                     {/* PDF Button */}
                                     <button
                                       className="icon-button pdf-button"
-                                      onClick={() => downloadReceipt(user.name,user.phoneNumber,user.place,monthEntry.date,monthEntry.amount,monthEntry.numberOfPayments,monthEntry.packageDetails,month)}
+                                      onClick={() => downloadReceipt(user.name, user.phoneNumber, user.place, monthEntry.date, monthEntry.amount, monthEntry.numberOfPayments, monthEntry.packageDetails, month)}
                                       disabled={isHomeClicked}
                                     >
                                       <FaFilePdf className="icon" />
@@ -876,7 +676,9 @@ const HomePage = () => {
               {months.map((month) => (
                 <div key={month}>
                   <label>{month}</label>
-                  <input
+                  <div className="date-container">
+                    <span>Date:</span>
+                    <input
                     type="date"
                     value={userData.months[month]?.date || ""}
                     onChange={(e) =>
@@ -889,6 +691,8 @@ const HomePage = () => {
                       )
                     }
                   />
+                  </div>
+                 
                   <input
                     type="number"
                     placeholder="Amount"
@@ -943,15 +747,6 @@ const HomePage = () => {
                 <button type="button" onClick={handlePopupClose}>
                   Cancel
                 </button>
-                {/* <button
-                  type="submit"
-                  onClick={() => {
-                    setDispatch(true);
-                    handleSubmit();
-                  }}
-                >
-                  Dispatch
-                </button> */}
 
                 <button
                   type="submit"
