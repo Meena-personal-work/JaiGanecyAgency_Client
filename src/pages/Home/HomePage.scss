@@ -31,7 +31,7 @@
         border-radius: 5px;
         cursor: pointer;
         transition: all 0.3s ease-in-out;
-        margin-top: 15px;
+        // margin-top: 15px;
 
         &:hover {
           background-color: #0056b3;
@@ -486,10 +486,10 @@ button:disabled {
 
 }
 
-.date-container{
+.date-container {
   justify-content: center;
   align-items: center;
-display: flex;
+  display: flex;
 }
 
 .close-button-container {
@@ -543,6 +543,10 @@ select {
     flex-direction: column;
     padding: 10px 10px;
     min-height: 180px;
+  }
+
+  .home-container__table-container__heading button {
+    margin-top: 10px;
   }
 
   .home-container__table-container__table-div {
@@ -633,3 +637,158 @@ select {
   font-size: 1.2rem;
   /* Icon size */
 }
+
+
+
+/* Mobile View Styles */
+.mobile-view {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+
+  .home-container__table-container__table-div__table {
+    display: none;
+  }
+
+  .desktop-view {
+    display: none;
+  }
+
+  .mobile-view {
+    display: block;
+    padding: 10px;
+  }
+
+  .user-card {
+    background: #f2e2c4;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border: 2px solid #8d6e63;
+    text-align: left;
+  }
+
+  .user-card p {
+    font-size: 14px;
+    margin: 5px 0;
+  }
+
+  .month-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .month-card {
+    background: #fff;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+
+  .month-card h4 {
+    margin: 0 0 5px;
+    font-size: 16px;
+    color: #333;
+  }
+
+  .month-card p {
+    font-size: 14px;
+    margin: 2px 0;
+  }
+
+  .user-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .user-actions button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .user-actions button:hover {
+    transform: scale(1.05);
+    background-color: #0056b3;
+  }
+
+  .icon-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: space-between;
+  }
+
+  .icon-button {
+    padding: 8px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .whatsapp-button {
+    background-color: #25d366;
+    color: white;
+  }
+
+  .whatsapp-button:hover {
+    background-color: #1ebe5c;
+    transform: scale(1.05);
+  }
+
+  .pdf-button {
+    background-color: #d32f2f;
+    color: white;
+  }
+
+  .pdf-button:hover {
+    background-color: #b71c1c;
+    transform: scale(1.05);
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .pagination button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .pagination button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+}
+
+.no-data-message {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 5px;
+}
+

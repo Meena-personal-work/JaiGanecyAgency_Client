@@ -34,6 +34,13 @@ const HomePage = () => {
   const [targetAdmin, setTargetAdmin] = useState(""); // Selected admin
   const [selectedFilter, setSelectedFilter] = useState("all"); // "all" or "dispatched"
 
+  // pagination
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 5;
+  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / itemsPerPage));
+  const startIndex = (page - 1) * itemsPerPage;
+  const currentUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
+
   const months = [
     "Nov",
     "Dec",
@@ -97,6 +104,7 @@ const HomePage = () => {
       fetchUsers(selectedAdmin);
     }
   }, [selectedAdmin]);
+
 
   const handleCardClick = (admin) => {
     if (admin === "Home") {
@@ -296,6 +304,7 @@ const HomePage = () => {
         fetchUsers(selectedAdmin);
         handlePopupClose();
         toast.success("Customer deleted successfully");
+        setPage(1);
       } else {
         console.error("Error deleting user:", await response.text());
         toast.error("Failed to delete user.");
@@ -376,21 +385,22 @@ const HomePage = () => {
 
   const handleDeleteAllDispatched = async () => {
     try {
-      // Call the API to clear all dispatched data
       const response = await fetch("https://goldfish-app-yunjc.ondigitalocean.app/api/users/clear-dispatched", {
-        method: "PUT",  // Use PUT to update data
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
       });
 
       if (response.ok) {
         toast.success("All dispatched data cleared successfully");
 
-        // After successful deletion, clear the filtered data
-        setUsers([]); // Clear users
-        setFilteredUsers([]); // Clear filtered users
+        // Re-fetch users after deleting dispatched data
+        if (selectedAdmin === "Home") {
+          fetchAllUsers();
+        } else {
+          fetchUsers(selectedAdmin);
+        }
 
-        // Now, re-fetch the data after clearing dispatched users
-        fetchUsers(selectedAdmin);  // Make sure selectedAdmin is passed
+        setSelectedFilter("all"); // Ensure dropdown resets to "All Data"
       } else {
         console.error("Error clearing dispatched data:", await response.text());
         toast.error("Failed to clear dispatched data.");
@@ -400,6 +410,19 @@ const HomePage = () => {
       toast.error("An error occurred while clearing dispatched data.");
     }
   };
+
+
+  useEffect(() => {
+    if (selectedAdmin) {
+      if (selectedFilter === "all") {
+        fetchUsers(selectedAdmin);
+      } else {
+        setFilteredUsers(users.filter(user => user.isDispatched));
+      }
+    }
+  }, [selectedFilter, selectedAdmin]); // Trigger re-fetch when dropdown changes
+
+
   const downloadReceipt = (
     userName,
     phoneNumber,
@@ -567,7 +590,6 @@ const HomePage = () => {
                                   <span>Payments:{monthEntry.numberOfPayments}</span>
 
                                   <div className="icon-buttons">
-                                    {/* WhatsApp Button */}
                                     <button
                                       className="icon-button whatsapp-button"
                                       onClick={() => handleWhatsapp(user)}
@@ -575,7 +597,6 @@ const HomePage = () => {
                                     >
                                       <FaWhatsapp className="icon" />
                                     </button>
-                                    {/* PDF Button */}
                                     <button
                                       className="icon-button pdf-button"
                                       onClick={() => downloadReceipt(user.name, user.phoneNumber, user.place, monthEntry.date, monthEntry.amount, monthEntry.numberOfPayments, monthEntry.packageDetails, month)}
@@ -616,8 +637,89 @@ const HomePage = () => {
                 )}
               </tbody>
             </table>
+
+            {/* mobile-view */}
+            <div className="mobile-view">
+              {currentUsers.length > 0 ? (
+                currentUsers.map((user) => (
+                  <div key={user._id} className="user-card">
+                    <p><strong>S.No:</strong> {user.serialNumber}</p>
+                    <p><strong>Name:</strong> {user.name}</p>
+                    <p><strong>Phone:</strong> {user.phoneNumber}</p>
+                    <p><strong>Place:</strong> {user.place}</p>
+                    <p><strong>Transport:</strong> {user.transportName || "-"}</p>
+
+                    {/* Show month-wise payment details only if data exists */}
+                    {user.monthData && user.monthData.length > 0 && (
+                      <div className="month-details">
+                        {months.map((month) => {
+                          const monthEntry = user.monthData?.find((data) => data.month === month);
+                          return (
+                            monthEntry && ( // Only render if monthEntry exists
+                              <div key={month} className="month-card">
+                                <h4>{month}</h4>
+                                <p><strong>Date:</strong> {new Date(monthEntry.date).toLocaleDateString("en-GB")}</p>
+                                <p><strong>Amount:</strong> ₹{monthEntry.amount}</p>
+                                <p><strong>Package:</strong> {monthEntry.packageDetails}</p>
+                                <p><strong>Payments:</strong> {monthEntry.numberOfPayments}</p>
+
+                                {/* Action Buttons */}
+                                <div className="icon-buttons">
+                                  <button
+                                    className="icon-button whatsapp-button"
+                                    onClick={() => handleWhatsapp(user)}
+                                    disabled={isHomeClicked}
+                                  >
+                                    <FaWhatsapp className="icon" />
+                                  </button>
+                                  <button
+                                    className="icon-button pdf-button"
+                                    onClick={() => downloadReceipt(user.name, user.phoneNumber, user.place, monthEntry.date, monthEntry.amount, monthEntry.numberOfPayments, monthEntry.packageDetails, month)}
+                                    disabled={isHomeClicked}
+                                  >
+                                    <FaFilePdf className="icon" />
+                                  </button>
+                                </div>
+                              </div>
+                            )
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* User Action Buttons */}
+                    <div className="user-actions">
+                      <button onClick={() => handlePopupOpen("edit", user)} disabled={isHomeClicked}>Edit</button>
+                      <button onClick={() => handleTransferPopupOpen(user)} disabled={isHomeClicked}>
+                        <FaArrowRight />
+                      </button>
+                      <button onClick={() => handleDeletePopupOpen(user)} disabled={isHomeClicked}>Delete</button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                // Show "No Data Found" if no users
+                <div className="no-data-message">
+                  <p>No data found</p>
+                </div>
+              )}
+
+              {/* Pagination */}
+              {totalPages > 1 && currentUsers.length > 0 && (
+                <div className="pagination">
+                  <button onClick={() => setPage(page - 1)} disabled={page === 1}>Prev</button>
+                  <span>Page {page} of {totalPages}</span>
+                  <button onClick={() => setPage(page + 1)} disabled={page >= totalPages}>Next</button>
+                </div>
+              )}
+            </div>
+
+
+
+
           </div>
         )}
+
       </div>
 
       {isPopupVisible && (
@@ -677,22 +779,22 @@ const HomePage = () => {
                 <div key={month}>
                   <label>{month}</label>
                   <div className="date-container">
-                    <span>Date: </span>
+                    <span>Date:&nbsp;</span>
                     <input
-                    type="date"
-                    value={userData.months[month]?.date || ""}
-                    onChange={(e) =>
-                      handleMonthChange(
-                        month,
-                        e.target.value, // date
-                        userData.months[month]?.amount || "",
-                        userData.months[month]?.packageDetails || "",
-                        userData.months[month]?.numberOfPayments || ""
-                      )
-                    }
-                  />
+                      type="date"
+                      value={userData.months[month]?.date || ""}
+                      onChange={(e) =>
+                        handleMonthChange(
+                          month,
+                          e.target.value, // date
+                          userData.months[month]?.amount || "",
+                          userData.months[month]?.packageDetails || "",
+                          userData.months[month]?.numberOfPayments || ""
+                        )
+                      }
+                    />
                   </div>
-                 
+
                   <input
                     type="number"
                     placeholder="Amount"
