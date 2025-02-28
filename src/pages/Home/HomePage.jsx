@@ -267,8 +267,10 @@ const HomePage = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedUserData),
       });
+      console.log(response,'meenaaaaaaa');
 
       if (response.ok) {
+        
         fetchUsers(selectedAdmin);
         handlePopupClose();
         setDispatch(false);
@@ -281,7 +283,7 @@ const HomePage = () => {
         );
       } else {
         console.error("Error saving user:", await response.text());
-        toast.error("Failed to save user.");
+        toast.error("Failed to save user. Please ensure you have selected a date, specify the package, amount, and enter the number of payments required..");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -347,10 +349,10 @@ const HomePage = () => {
     const filtered = users.filter(user => {
       // Safely extract and convert all user fields to strings for comparison
       const userName = String(user.name || "").toLowerCase();
-      const userPhoneNumber = String(user.phoneNumber || "").toLowerCase();
+      // const userPhoneNumber = String(user.phoneNumber || "").toLowerCase();
       const userPlace = String(user.place || "").toLowerCase();
-      const userTransportName = String(user.transportName || "").toLowerCase();
-      const serialNumber = String(user.serialNumber || "").toLowerCase();
+      // const userTransportName = String(user.transportName || "").toLowerCase();
+      // const serialNumber = String(user.serialNumber || "").toLowerCase();
 
       // Check if any packageDetails in monthData matches the query
       const packageMatch = user.monthData?.some(month =>
@@ -504,8 +506,6 @@ const HomePage = () => {
   <img className="home-container__company-gif" src={"/crackers.gif"} alt="Crackers Animation" />
   <h1>Jai Ganesh Agencies</h1>
 </div>
-
-
       <div className="home-container__admin-selection">
         {window.innerWidth <= 768 ? ( // Check if screen is small (mobile)
           <select
