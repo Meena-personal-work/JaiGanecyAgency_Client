@@ -1,13 +1,11 @@
 .home-container {
   background: blanchedalmond;
-  // height: 100vh;
+  height: 1000px;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
 
-  &__company-gif{
-    width: 100%;
-  }
+ 
 
   &__company-name-gif{
     text-align: center;
@@ -17,6 +15,9 @@
   font-size: 20px; /* Adjust size as needed */
   font-weight: bold;
   display: inline-block;
+  &__gif{
+    width: 100%;
+  }
   }
 
   &__card-container {

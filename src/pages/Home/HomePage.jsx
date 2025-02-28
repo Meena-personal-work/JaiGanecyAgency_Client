@@ -503,7 +503,7 @@ const HomePage = () => {
         ))}
       </div> */}
     <div className="home-container__company-name-gif">
-  <img className="home-container__company-gif" src={"/crackers.gif"} alt="Crackers Animation" />
+  <img className="home-container__company-name-gif__gif" src={"/crackers.gif"} alt="Crackers Animation" />
   <h1>Jai Ganesh Agencies</h1>
 </div>
       <div className="home-container__admin-selection">
