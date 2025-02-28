@@ -62,7 +62,6 @@ const HomePage = () => {
     "Saranya",
   ];
 
-
   const fetchUsers = async (admin) => {
     if (!admin) return;
 
@@ -104,7 +103,6 @@ const HomePage = () => {
       fetchUsers(selectedAdmin);
     }
   }, [selectedAdmin]);
-
 
   const handleCardClick = (admin) => {
     if (admin === "Home") {
@@ -185,9 +183,6 @@ const HomePage = () => {
       return;
     }
 
-    console.log(userToTransfer._id, "transfer");
-
-
     try {
       const response = await fetch(
         `https://goldfish-app-yunjc.ondigitalocean.app/api/users/transfer/client/${userToTransfer._id}`,
@@ -201,7 +196,7 @@ const HomePage = () => {
       if (response.ok) {
         toast.success(`Client transferred to ${targetAdmin} successfully!`);
         fetchUsers(selectedAdmin); // Refresh current admin's user list
-      setTargetAdmin(""); 
+        setTargetAdmin("");
         setTransferPopupVisible(false);
       } else {
         console.error("Error transferring user:", await response.text());
@@ -213,40 +208,28 @@ const HomePage = () => {
     }
   };
 
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
 
-  // const handleMonthChange = (month, date, amount, packageDetails, numberOfPayments) => {
-  //   setUserData((prevData) => ({
-  //     ...prevData,
-  //     months: {
-  //       ...prevData.months,
-  //       [month]: { date, amount, packageDetails, numberOfPayments },
-  //     },
-  //   }));
-  // };
-
   const handleMonthChange = (month, date, amount, packageDetails, numberOfPayments) => {
     setUserData((prevData) => {
       const updatedMonths = { ...prevData.months };
-  
+
       // Check if all fields are empty
       if (!date.trim() && !amount.trim() && !packageDetails.trim() && !numberOfPayments.trim()) {
         delete updatedMonths[month]; // Remove the month from state
       } else {
         updatedMonths[month] = { date, amount, packageDetails, numberOfPayments };
       }
-  
+
       return {
         ...prevData,
         months: updatedMonths,
       };
     });
   };
-  
 
   const handleSubmit = async (e, isDispatching = false) => {
     e.preventDefault();
@@ -306,9 +289,6 @@ const HomePage = () => {
     }
   };
 
-
- 
-
   const handleDeletePopupOpen = (user) => {
     setUserToDelete(user);
     setDeletePopupVisible(true);
@@ -337,7 +317,6 @@ const HomePage = () => {
       toast.error("An error occurred.");
     }
   };
-
 
   const handleWhatsapp = (user) => {
     setUserToWhatsapp(user);
@@ -434,7 +413,6 @@ const HomePage = () => {
     }
   };
 
-
   useEffect(() => {
     if (selectedAdmin) {
       if (selectedFilter === "all") {
@@ -514,14 +492,41 @@ const HomePage = () => {
     pdf.save(`Receipt_${userName}.pdf`);
   };
 
-
   return (
     <div className="home-container">
       <ToastContainer />
-      <div className="home-container__card-container">
+      {/* <div className="home-container__card-container">
         {admins.map((admin) => (
           <Card key={admin} name={admin} onClick={() => handleCardClick(admin)} />
         ))}
+      </div> */}
+    <div className="home-container__company-name-gif">
+  <img className="home-container__company-gif" src={"/crackers.gif"} alt="Crackers Animation" />
+  <h1>Jai Ganesh Agencies</h1>
+</div>
+
+
+      <div className="home-container__admin-selection">
+        {window.innerWidth <= 768 ? ( // Check if screen is small (mobile)
+          <select
+            value={selectedAdmin}
+            onChange={(e) => handleCardClick(e.target.value)}
+            className="admin-dropdown"
+          >
+            <option value="">Select Admin</option>
+            {admins.map((admin) => (
+              <option key={admin} value={admin}>
+                {admin}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <div className="home-container__card-container">
+            {admins.map((admin) => (
+              <Card key={admin} name={admin} onClick={() => handleCardClick(admin)} />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="home-container__table-container">
@@ -537,7 +542,6 @@ const HomePage = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}  // Update searchQuery state on change
                 className="search-input"
               />
-
 
               {selectedAdmin === "Home" && (
                 <select
@@ -559,11 +563,7 @@ const HomePage = () => {
                   Delete All Dispatched Data
                 </button>
               )}
-
-
-
               <button onClick={() => handlePopupOpen("add")} disabled={isHomeClicked}>Add User</button>
-
             </>
           )}
         </div>
@@ -737,13 +737,8 @@ const HomePage = () => {
                 </div>
               )}
             </div>
-
-
-
-
           </div>
         )}
-
       </div>
 
       {isPopupVisible && (
@@ -873,17 +868,13 @@ const HomePage = () => {
                 <button type="button" onClick={handlePopupClose}>
                   Cancel
                 </button>
-
                 <button
                   type="submit"
                   onClick={(e) => handleSubmit(e, true)} // Passing true to indicate dispatch
                 >
                   Dispatch
                 </button>
-
-
               </div>
-
             </form>
           </div>
         </div>
@@ -936,7 +927,6 @@ const HomePage = () => {
                   <option key={admin} value={admin}>{admin}</option>
                 ))}
             </select>
-
 
             <div className="form__actions">
               <button type="submit" onClick={handleConfirmTransfer}>Confirm Transfer</button>
