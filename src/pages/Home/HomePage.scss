@@ -1,8 +1,9 @@
 .home-container {
   background: blanchedalmond;
-  height: 100vh;
+  // height: 100vh;
   display: flex;
   flex-direction: column;
+  border-radius: 10px;
 
   &__company-gif{
     width: 100%;
