@@ -66,7 +66,7 @@ const HomePage = () => {
     if (!admin) return;
 
     try {
-      const response = await fetch(`https://goldfish-app-yunjc.ondigitalocean.app/api/users/${admin}`);
+      const response = await fetch(`https://goldfish-app-94dh7.ondigitalocean.app/api/users/${admin}`);
       const data = await response.json();
 
       const usersWithSerialNumbers = data.map((user, index) => ({
@@ -83,7 +83,7 @@ const HomePage = () => {
 
   const fetchAllUsers = async () => {
     try {
-      const response = await fetch("https://goldfish-app-yunjc.ondigitalocean.app/api/users");
+      const response = await fetch("https://goldfish-app-94dh7.ondigitalocean.app/api/users");
       const data = await response.json();
 
       const usersWithSerialNumbers = data.map((user, index) => ({
@@ -185,7 +185,7 @@ const HomePage = () => {
 
     try {
       const response = await fetch(
-        `https://goldfish-app-yunjc.ondigitalocean.app/api/users/transfer/client/${userToTransfer._id}`,
+        `https://goldfish-app-94dh7.ondigitalocean.app/api/users/transfer/client/${userToTransfer._id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -237,8 +237,8 @@ const HomePage = () => {
     try {
       const url =
         popupType === "add"
-          ? "https://goldfish-app-yunjc.ondigitalocean.app/api/users"
-          : `https://goldfish-app-yunjc.ondigitalocean.app/api/users/${selectedAdmin}/${currentUser._id}`;
+          ? "https://goldfish-app-94dh7.ondigitalocean.app/api/users"
+          : `https://goldfish-app-94dh7.ondigitalocean.app/api/users/${selectedAdmin}/${currentUser._id}`;
       const method = popupType === "add" ? "POST" : "PUT";
 
       // Prepare the data to send to the backend
@@ -299,7 +299,7 @@ const HomePage = () => {
   const handleDelete = async () => {
     try {
       const response = await fetch(
-        `https://goldfish-app-yunjc.ondigitalocean.app/api/users/${selectedAdmin}/${userToDelete._id}`,
+        `https://goldfish-app-94dh7.ondigitalocean.app/api/users/${selectedAdmin}/${userToDelete._id}`,
         {
           method: "DELETE",
         }
@@ -389,7 +389,7 @@ const HomePage = () => {
 
   const handleDeleteAllDispatched = async () => {
     try {
-      const response = await fetch("https://goldfish-app-yunjc.ondigitalocean.app/api/users/clear-dispatched", {
+      const response = await fetch("https://goldfish-app-94dh7.ondigitalocean.app/api/users/clear-dispatched", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
       });
